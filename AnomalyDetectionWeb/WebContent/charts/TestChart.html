@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<title>Chart</title>
+<script src="../resources/js/charts/Chart.bundle.js"></script>
+<script src="../resources/js/charts/utils.js"></script>
+<script src="../resources/js/jquery-3.3.1.js"></script>
+<style>
+canvas {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+</style>
+</head>
+<body>
+	<div id="container" style="width: 95%;">
+		<canvas id="canvas"></canvas>
+	</div>
+
+	<script>
+		var color = Chart.helpers.color;
+		
+		function drawLineChart()
+		{
+			$.ajax({
+				type: "GET", 
+				url : '/GlobalShares/test/0001',
+				dataType : 'json',
+			}).done(function(results) {
+				
+				// Split timestamp and data into separate arrays
+			    var labels = [], data1=[], data2=[], data3=[];
+			    $.each(results, function( index, value ) {
+					  //alert( index + ": " + value.mYear );
+					  labels.push(value.mYear)
+					  data1.push(value.value1)
+					  data2.push(value.value2)
+					  data3.push(value.value3)
+				});
+
+			    // Create the chart.js data structure using 'labels' and 'data'
+			    var barChartData = {
+			      labels : labels,
+			      datasets : [{
+			    	label			: "Sector Value",
+					backgroundColor	: color(window.chartColors.red).alpha(0.5).rgbString(),
+					borderColor		: window.chartColors.red,
+					borderWidth		: 1,
+					data			: data1
+			      },{
+			    	label			: "Mean Value",
+					backgroundColor	: color(window.chartColors.blue).alpha(0.5).rgbString(),
+					borderColor		: window.chartColors.blue,
+					borderWidth		: 1,
+					data			: data2
+			      },{
+			    	label			: "Real Value",
+					backgroundColor	: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+					borderColor		: window.chartColors.yellow,
+					borderWidth		: 1,
+					data			: data3
+			      }]
+			    };
+				
+			    //
+			    var ctx = document.getElementById('canvas').getContext('2d');
+				window.myBar = new Chart(ctx, {
+					type: 'bar',
+					data: barChartData,
+					options: {
+						responsive: true,
+						legend: {
+							position: 'top',
+						},
+						title: {
+							display: true,
+							text: 'Compare Value'
+						}
+					}
+				});
+
+			});
+		}
+	
+		drawLineChart();
+		
+	</script>
+</body>
+</html>

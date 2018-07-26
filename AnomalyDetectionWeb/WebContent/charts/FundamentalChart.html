@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<title>Chart Display</title>
+<script src="../resources/js/charts/Chart.bundle.js"></script>
+<script src="../resources/js/charts/utils.js"></script>
+<script src="../resources/js/jquery-3.3.1.js"></script>
+<style>
+canvas {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+</style>
+</head>
+<body>
+	<div id="container" style="width: 95%;">
+		<canvas id="canvas"></canvas>
+	</div>
+
+	<script>
+	function getQueryString(name) 
+	{
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	var companyId = getQueryString("companyId");//"0C00000WOD";//qs.get("companyId");
+	var indicator = getQueryString("indicator");//"totalReturn";//qs.get("indicator");	
+	//alert(companyId +"  "+indicator);
+
+	var color = Chart.helpers.color;
+	function drawHisFunBarChart(companyId,indicator)
+	{
+		$.ajax({
+			type: "GET", 
+			url : '/GlobalShares/singleHisf/'+ companyId + '/'+ indicator,
+			dataType : 'json',
+		}).done(function(results) {
+			
+			// Split data into separate arrays
+			var companyName = "";
+		    var labels = [], data1=[], data2=[], data3=[],data4=[];
+		    $.each(results, function( index, value ) {
+				  //alert( index + ": " + value.mYear );
+				  companyName = value.companyName;
+				  labels.push(value.myYear)
+				  data1.push(value.myValue)
+				  data2.push(value.sectorMean)
+				  data3.push(value.topQuartileMean)
+				  data4.push(value.gICSMarketMean)
+			});
+
+		    // Create the chart.js data structure using 'labels' and 'data'
+		    var barChartData = {
+		      labels : labels,
+		      datasets : [{
+		    	label			: "Current Value",
+				backgroundColor	: color(window.chartColors.red).alpha(0.5).rgbString(),
+				borderColor		: window.chartColors.red,
+				borderWidth		: 1,
+				data			: data1
+		      },{
+		    	label			: "Sector Mean",
+				backgroundColor	: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				borderColor		: window.chartColors.blue,
+				borderWidth		: 1,
+				data			: data2
+		      },{
+		    	label			: "Top Quartile Mean",
+				backgroundColor	: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+				borderColor		: window.chartColors.yellow,
+				borderWidth		: 1,
+				data			: data3
+		      },{
+		    	label			: "GICS Market Mean",
+				backgroundColor	: color(window.chartColors.green).alpha(0.5).rgbString(),
+				borderColor		: window.chartColors.green,
+				borderWidth		: 1,
+				data			: data4
+		      }]
+		    };
+			
+		    //
+		    var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Compare ' + indicator + ' Value of '+ companyName
+					}
+				}
+			});
+
+		});
+	}
+	
+	//drawHisFunBarChart(companyId,indicator);
+		
+	</script>
+</body>
+</html>

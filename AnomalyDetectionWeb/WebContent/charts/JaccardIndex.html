@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+<title>Chart Display</title>
+<script src="../js/charts/Chart.bundle.js"></script>
+<script src="../js/charts/utils.js"></script>
+<script src="../js/jquery-3.3.1.js"></script>
+<style>
+canvas {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+</style>
+</head>
+<body>
+	<div id="container" style="width: 95%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<button id="addDataset">Add Dataset</button>
+	
+	
+	<script>
+		var color = Chart.helpers.color;
+		
+		function getFormattedDate(argDate) 
+		{
+			var todayTime = new Date();
+			if (argDate != null)
+			{
+				todayTime = argDate
+			}
+			var year  = todayTime.getFullYear();
+		    var month = todayTime.getMonth() + 1;
+		    var day   = todayTime.getDate();
+		    if(day<10) 
+		    {
+		    	day='0'+day;
+		    } 
+		    if(month<10) 
+		    {
+		    	month='0'+month;
+		    } 
+		    return year + "/" + month + "/" + day;
+		}
+		
+		function getQueryString(name) 
+		{
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
+		}
+
+		var lineChartData = {
+			labels : [],
+			datasets : []
+		}
+		
+		function renderLineChart()
+		{
+		    var ctx = document.getElementById('canvas').getContext('2d');
+			window.myChart = new Chart(ctx, {
+				type: 'line',
+				data: lineChartData,
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Jaccard Index'
+					},
+					
+				}
+			});
+		}
+		
+		function drawStockLineChart(argStockName)
+		{
+			var myStockName;
+			var myLabels = [];
+			var myData  = [];
+			
+			$.ajax({
+				type: "GET", 
+				url : '/MyProject/initJaccardData/'+ argStockName,
+				dataType : 'json',
+			}).done(function(results) {
+			    $.each(results, function( index, value ) {
+			    	myStockName = value.stockName;
+			    	myLabels.push(getFormattedDate(new Date(value.tdate)));
+			    	myData.push(value.jaccard);
+				});
+			    
+			    var newDataset = {
+					label: myStockName,
+					fill: false,
+					pointRadius:0,
+					steppedLine:true,
+					backgroundColor	: color(window.chartColors.red).alpha(0.5).rgbString(),
+					borderColor		: window.chartColors.red,
+					borderWidth		: 1,
+					data			: myData
+				};
+					
+				lineChartData.labels = myLabels;
+				lineChartData.datasets.push(newDataset);
+				renderLineChart();
+			});
+		}
+		
+		var colorNames = Object.keys(window.chartColors);
+		document.getElementById('addDataset').addEventListener('click', function() {
+			var stockName="";
+			var colorName = colorNames[lineChartData.datasets.length % colorNames.length];
+			var dsColor = window.chartColors[colorName];
+			var newDataset = {
+				label: stockName,
+				fill: false,
+				pointRadius:1,
+				backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+				borderColor: dsColor,
+				borderWidth: 1,
+				data: []
+			};
+	
+			$.ajax({
+				type: "GET", 
+				url : '/MyProject/addJaccardData',
+				dataType : 'json',
+			}).done(function(results) {
+			    $.each(results, function( index, value ) 
+			    {
+			    	newDataset.label = value.stockName;
+			    	newDataset.data.push(value.jaccard);
+				});
+	
+				lineChartData.datasets.push(newDataset);
+				window.myChart.update();
+			});
+		});
+		
+		drawStockLineChart("0");
+		
+	</script>
+</body>
+</html>

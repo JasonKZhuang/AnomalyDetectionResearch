@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="testService" class="detection.web.Test"
+		init-method="init" destroy-method="destroy">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="2" />
+	</bean>
+	
+	<!--  bean id="capstoneDataService" class="com.capstone.dataService.DataService"
+		init-method="processData" destroy-method="destroy">
+	</bean -->
+	
+
+</beans>
