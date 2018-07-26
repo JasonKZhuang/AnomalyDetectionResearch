@@ -1,0 +1,8 @@
+
+*.jar
+AnomalyDetectionWeb/WebContent/WEB-INF/lib/servlet-api.jar1
+AnomalyDetectionWeb/WebContent/WEB-INF/lib/.DS_Store
+AnomalyDetectionWeb/WebContent/WEB-INF/classes/.DS_Store
+AnomalyDetectionWeb/WebContent/WEB-INF/.DS_Store
+AnomalyDetectionWeb/WebContent/META-INF/MANIFEST.MF
+Anomalydetection/libs/.DS_Store
