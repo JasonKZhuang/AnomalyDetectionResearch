@@ -21,8 +21,19 @@ public class MyConstants
 	
 	public static final String TABLE_DIVIDEWINDOWS = "DividedWindows";
 	
+	public static final String TABLE_PEER_GROUP = "PeerGroup";
+	
+	public static final String TABLE_WEIGHTS = "weights";
+	
+	public static final String TABLE_CELLS_DISTANCE = "CellsDistance";
+	
 	//subdivide factor N
 	public static final int dividedFactor = 5;
+	
+	//gamma coefficient,could be 0.5,1.0,1.5,2.0
+	public static final double gamma = 0.5;
+
+	
 	
 
 }

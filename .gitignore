@@ -6,3 +6,13 @@ AnomalyDetectionWeb/WebContent/WEB-INF/classes/.DS_Store
 AnomalyDetectionWeb/WebContent/WEB-INF/.DS_Store
 AnomalyDetectionWeb/WebContent/META-INF/MANIFEST.MF
 Anomalydetection/libs/.DS_Store
+Anomalydetection/target/classes/algorithms/AlgorithmsHelper$DistanceComparator.class
+Anomalydetection/target/classes/.DS_Store
+*.class
+AnomalyDetectionWeb/WebContent/WEB-INF/classes/applicationContext.xml
+AnomalyDetectionWeb/WebContent/WEB-INF/classes/detection/.DS_Store
+AnomalyDetectionWeb/WebContent/WEB-INF/classes/detection/beans/.DS_Store
+AnomalyDetectionWeb/WebContent/WEB-INF/classes/dispatcher-servlet.xml
+AnomalyDetectionWeb/WebContent/.DS_Store
+AnomalyDetectionWeb/WebContent/.DS_Store
+AnomalyDetectionWeb/.DS_Store

@@ -2,7 +2,7 @@ package detection.beans;
 
 import java.util.Date;
 
-public class DividedWindows
+public class DividedStockWindow
 {
 	private int dw_id;
 	private String stock_name;

@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+<head>
+<title>Chart Display</title>
+<script src="../js/charts/Chart.bundle.js"></script>
+<script src="../js/charts/utils.js"></script>
+<script src="../js/jquery-3.3.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<style>
+canvas {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+</style>
+</head>
+<body>
+	<div>
+		<p>
+			dividedFactor = 5 trading days
+			Trading date between 2006-01-03 and 2006-12-29
+		</p>
+	</div>
+	
+	<div ng-app="myApp" ng-controller="myCtrl" ng-init="getAllStockName()">
+		<p>
+			Select a stock: 
+			<select ng-model="selectedStock" 
+					ng-options="x for x in stocks"
+					ng-change ="changeStockOption(selectedStock)"
+					style="background-color: yellow;"
+					></select>
+			You selected: {{selectedStock}}
+			<button id="addPeersDataset" ng-click="addPeersDataset(selectedStock)">Add Peers data set</button>
+			<button id="addMeanDataset" ng-click="addMeanDataset(selectedStock)">Add Mean value data set</button>
+			<button id="nextStockOption" ng-click="nextStockOption()">Next Stock Option</button>
+			
+		</p>
+		
+		<div id="container" style="width: 95%;">
+			<canvas id="canvas"></canvas>
+		</div>
+		
+	</div>
+	
+	<script>
+		var app = angular.module('myApp', []);
+		var urlBase="http://localhost:8080/MyProject";
+		var solidWidthSelf=2;
+		var solidWidthPeer=3;
+		var solidWidthMean=4;
+		app.controller('myCtrl', function($scope,$http) 
+		{
+			/////
+			$scope.getAllStockName = function getAllStockName()
+			{
+				var newUrl = urlBase + '/kim/getStockNames'
+				$http({
+					  method: 'GET',
+					  url: newUrl
+					}).then(function successCallback(response) {
+					    // this callback will be called asynchronously
+					    // when the response is available
+						$scope.stocks = response.data;
+					  }, function errorCallback(response) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+					  });
+			}
+			
+			var idx = 0;
+			$scope.nextStockOption = function nextStockOption()
+			{
+				var stockName = $scope.stocks[idx];
+				$scope.selectedStock = stockName;
+				$scope.changeStockOption(stockName);
+				idx = idx + 1;
+				/* 
+				angular.forEach($scope.stocks,function(v,k){
+				    console.log(k + "---->" + v);
+				})  */
+				
+				
+			}
+			
+			//////
+			var color = Chart.helpers.color;
+			var lineChartData = {
+					labels : [],
+					datasets : []
+			}
+			
+			///
+			$scope.changeStockOption = function changeStockOption(stockName)
+			{
+				var dsColor = color(window.chartColors.red).alpha(0.5).rgbString();
+				lineChartData.labels=[];
+				lineChartData.datasets=[];
+				$scope.addNewStock(stockName,dsColor,solidWidthSelf);
+			}
+			
+			////
+			$scope.addNewStock = function addNewStock(stockName, dsColor, solidWidth)
+			{
+				var newUrl = urlBase + "/kim/getDividedStock/" + stockName
+				
+				var horizontalLabels = [];
+				///
+				var seriesName  	 = stockName;
+				var seriesData  = [];
+				var seriesDataset = {
+					label: seriesName,
+					fill: false,
+					pointRadius: 0,
+					steppedLine: false,
+					backgroundColor	: color(dsColor).alpha(0.5).rgbString(),
+					borderColor		: dsColor,
+					borderWidth		: solidWidth,
+					data			: []
+				};
+				
+				$http({
+					  method: 'GET',
+					  url: newUrl
+				}).then(function successCallback(response) {
+					
+					$.each(response.data, function( index, value ) {
+						horizontalLabels.push("w"+value.window_no);
+						seriesDataset.data.push(value.avg_price);
+					});
+					
+					lineChartData.labels = horizontalLabels;
+					lineChartData.datasets.push(seriesDataset);
+					
+					if (solidWidth == solidWidthPeer || solidWidth == solidWidthMean)
+					{
+						window.myChart.update();
+					}
+					if (solidWidth == solidWidthSelf)
+					{
+						console.log("===============");
+						$scope.renderLineChart();
+					}
+					
+				}, function errorCallback(response) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+				});
+			}
+			
+			////
+			$scope.renderLineChart = function renderLineChart()
+			{
+			    var ctx = document.getElementById('canvas').getContext('2d');
+			    console.log("==3===");
+				window.myChart = new Chart(ctx, {
+					type: 'line',
+					data: lineChartData,
+					options: {
+						responsive: true,
+						legend: {
+							position: 'top',
+						},
+						title: {
+							display: true,
+							text: 'Stock Average Close Price in Windows'
+						},
+						
+					}
+				});
+			}
+
+			/////
+			var colorNames = Object.keys(window.chartColors);
+			$scope.addPeersDataset = function addPeersDataset(stockName)
+			{
+				var newUrl = urlBase + "/kim/getPeerNames/" + stockName
+				var colorName;
+				var dsColor = window.chartColors.blue;
+				
+				$http({
+					  method: 'GET',
+					  url: newUrl
+				}).then(function successCallback(response) {
+					
+					$.each(response.data, function( index, value ) 
+					{
+						//colorName = colorNames[lineChartData.datasets.length % colorNames.length];
+						//dsColor = window.chartColors[colorName];
+						$scope.addNewStock(value,dsColor,solidWidthPeer);
+					});
+				}, function errorCallback(response) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+				});
+			}
+			
+			////
+			$scope.addMeanDataset = function addMeanDataset(stockName)
+			{
+				var newUrl = urlBase + "/kim/getPeerGroups/" + stockName
+				var dsColor = window.chartColors.yellow;
+				
+				///
+				var seriesName  	 = stockName + "'s mean value";
+				var seriesData  = [];
+				var seriesDataset = {
+					label: seriesName,
+					fill: false,
+					pointRadius: 0,
+					steppedLine: true,
+					backgroundColor	: color(dsColor).alpha(0.5).rgbString(),
+					borderColor		: dsColor,
+					borderWidth		: solidWidthMean,
+					data			: []
+				};
+				
+				$http({
+					  method: 'GET',
+					  url: newUrl
+				}).then(function successCallback(response) {
+					
+					$.each(response.data, function( index, value ) {
+						//seriesDataset.data.push(value.mean_value);
+						seriesDataset.data.push(value.mean_value_with_weights);
+						
+					});
+					
+					lineChartData.datasets.push(seriesDataset);
+					window.myChart.update();
+				}, function errorCallback(response) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+				});
+			}
+			
+			
+		});
+	</script>
+	
+	
+</body>
+</html>
