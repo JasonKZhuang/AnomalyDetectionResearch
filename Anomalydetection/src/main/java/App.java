@@ -35,8 +35,8 @@ public class App
         dbHelper   = new DatabaseHelperImpl();
         algHelper  = new AlgorithmsHelper();
         App app = new App();
-        //app.importStockName();
-        //app.importStockData();
+        app.importStockName();
+        app.importStockData();
         app.process();
         //app.processTest();
     }

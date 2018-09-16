@@ -1,11 +1,8 @@
 package detection.algorithms.kim;
 
-import java.util.HashMap;
 import java.util.List;
 
-import detection.beans.SortValueBean;
 import detection.beans.StockRecord;
-import detection.beans.kim.PeerGroup;
 import detection.db.DatabaseHelperImpl;
 import detection.db.IDatabaseHelper;
 

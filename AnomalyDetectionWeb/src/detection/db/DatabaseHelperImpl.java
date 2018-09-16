@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 import detection.beans.DividedStockWindow;
 import detection.beans.JaccardBean;
 import detection.beans.StockKNNBean;
+import detection.beans.StockName;
 import detection.beans.StockRecord;
+import detection.beans.StockReturnRate;
 import detection.beans.kim.CellsDistance;
 import detection.beans.kim.PeerGroup;
 import detection.beans.kim.PeerGroupBean;
@@ -32,6 +36,101 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 {
 
 	protected static final Log myLog = LogFactory.getLog(DatabaseHelperImpl.class);
+	
+	public void insertName(List<String> nameList)
+	{
+		String sql = " insert into " + MyConstants.TABLE_STOCK_NAME +" (symbol)  values (?) ";
+		Connection conn = ConnectionSingleton.getConnection();
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+	
+			for (String strName: nameList) 
+			{
+				ps.setString(1, strName);
+				ps.addBatch();
+			}
+			
+			ps.executeBatch();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Inster finished.");
+		}
+	}
+	
+	public void insertRecords(String stockName, List<StockRecord> records)
+	{
+		/*
+		'id','int(11)','NO','PRI',NULL,'auto_increment'
+		'stockName','varchar(45)','NO','',NULL,''
+		'tdate','date','YES','',NULL,''
+		'open','decimal(10,3)','YES','',NULL,''
+		'high','decimal(10,3)','YES','',NULL,''
+		'low','decimal(10,3)','YES','',NULL,''
+		'close','decimal(10,3)','YES','',NULL,''
+		'volume','bigint(20)','YES','',NULL,''
+		*/
+		
+		String sql = " insert into " + MyConstants.TABLE_STOCK_RECORDS +" (stockName, tdate, open,high,low,close,volume) "
+				+    " values (?, ?, ?, ?, ?, ?, ?) ";
+		Connection conn = ConnectionSingleton.getConnection();
+		
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+	
+			for (StockRecord stock: records) 
+			{
+				ps.setString(1, stock.getStockName());
+				ps.setDate(2, new java.sql.Date(stock.getTdate().getTime()));
+				ps.setFloat(3, stock.getOpen());
+				ps.setFloat(4, stock.getHigh());
+				ps.setFloat(5, stock.getLow());
+				ps.setFloat(6, stock.getClose());
+				ps.setFloat(7, stock.getVolume());
+				ps.addBatch();
+			}
+			
+			ps.executeBatch();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
 	
 	@Override
 	public List<String> getStockNames()
@@ -46,9 +145,9 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		{
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT id, name FROM " + MyConstants.TABLE_STOCK_NAME 
+			sql = "SELECT id, symbol FROM " + MyConstants.TABLE_STOCK_NAME 
 				//+ " WHERE name like 'd%' "
-				+ " ORDER BY name";
+				+ " ORDER BY symbol";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next())
 			{
@@ -79,6 +178,326 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 			} // nothing we can do
 		} // end try
 		return retList;
+	}
+	
+	@Override
+	public List<StockName> getAllStocks()
+	{
+		myLog.info("get all stock Objects ...");
+		List<StockName> returnList = new ArrayList<>();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		try
+		{
+			stmt = conn.createStatement();
+			String sql;
+			sql = " SELECT id, symbol, realName, marketCap, sector, industryGroup"
+				+ " FROM " + MyConstants.TABLE_STOCK_NAME ;
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				// Retrieve by column name
+				int id = rs.getInt("id");
+				String symbol = rs.getString("symbol");
+				String realName = rs.getString("realName");
+				double marketCap = rs.getDouble("marketCap");
+				String sector = rs.getString("sector");
+				String group = rs.getString("industryGroup");
+				StockName sn = new StockName();
+				sn.setId(id);
+				sn.setSymbol(symbol);
+				sn.setRealName(realName);
+				sn.setMarketCap(marketCap);
+				sn.setSector(sector);
+				sn.setIndustryGroup(group);
+				returnList.add(sn);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally
+		{
+			// finally block used to close resources
+			try
+			{
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
+			{
+			} // nothing we can do
+		} // end try
+		
+		return returnList;
+	}
+	
+	@Override
+	public List<StockName> getStocksBySector(String sector)
+	{
+		myLog.info("----->Get stock Objects by Sector..." + sector);
+		
+		List<StockName> returnList = new ArrayList<>();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		try
+		{
+			stmt = conn.createStatement();
+			String sql;
+			sql = " SELECT id, symbol, realName, marketCap, sector, industryGroup"
+				+ " FROM " + MyConstants.TABLE_STOCK_NAME
+				+ " Where sector='" + sector +"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				// Retrieve by column name
+				int id = rs.getInt("id");
+				String symbol = rs.getString("symbol");
+				String realName = rs.getString("realName");
+				double marketCap = rs.getDouble("marketCap");
+				//String sector = rs.getString("sector");
+				String group = rs.getString("industryGroup");
+				StockName sn = new StockName();
+				sn.setId(id);
+				sn.setSymbol(symbol);
+				sn.setRealName(realName);
+				sn.setMarketCap(marketCap);
+				sn.setSector(sector);
+				sn.setIndustryGroup(group);
+				returnList.add(sn);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally
+		{
+			// finally block used to close resources
+			try
+			{
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
+			{
+			} // nothing we can do
+		} // end try
+		
+		return returnList;
+	}
+	
+	@Override
+	public void deleStockNameById(int id)
+	{
+		String sql = "DELETE FROM " + MyConstants.TABLE_STOCK_NAME
+				+ " WHERE id =? ";
+		Connection conn = ConnectionSingleton.getConnection();
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			ps.executeUpdate();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleStockNameAndRecordsBySymbol(String symbol)
+	{
+		String sqlName = "DELETE FROM " + MyConstants.TABLE_STOCK_NAME
+				+ " WHERE symbol ='"+symbol+"'";
+		String sqlRecord = "DELETE FROM " + MyConstants.TABLE_STOCK_RECORDS
+				+ " WHERE stockName ='"+symbol+ "'";
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement st = null;
+		try
+		{
+			st = conn.createStatement();
+			st.addBatch(sqlName);
+			st.addBatch(sqlRecord);
+			st.executeBatch();
+			st.clearBatch();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (st != null)
+			{
+				try
+				{
+					st.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void updateStockDetail(List<StockName> stocksDetailFromFile)
+	{
+//		private String symbol;
+//		private String realName;
+//		private double marketCap;//million
+//		private String sector;
+//		private String industryGroup;
+		int i=0;
+		for (StockName stockName : stocksDetailFromFile)
+		{
+			String sql = "UPDATE  " + MyConstants.TABLE_STOCK_NAME
+					+ " SET realName=?,marketCap=?,sector=?,industryGroup=?"
+					+ " WHERE symbol = ?";
+			Connection conn = ConnectionSingleton.getConnection();
+			
+			PreparedStatement ps = null;
+			try
+			{
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, stockName.getRealName());
+				ps.setDouble(2, stockName.getMarketCap()/1000000);//million
+				ps.setString(3, stockName.getSector());
+				ps.setString(4, stockName.getIndustryGroup());
+				ps.setString(5, stockName.getSymbol().toLowerCase());
+				ps.executeUpdate();
+				i++;
+			}catch(SQLException sqlExp)
+			{
+				sqlExp.printStackTrace();
+			}catch(Exception exp)
+			{
+				exp.printStackTrace();
+			}finally
+			{
+				if (ps != null)
+				{
+					try
+					{
+						ps.close();
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		System.out.println("update " + i + " companies.");
+		
+	}
+	
+	@Override
+	public void trimDateDurationOfRecords(Date min, Date max) 
+	{
+		String sql = "Delete From  " + MyConstants.TABLE_STOCK_RECORDS
+				+ " Where tdate<? or tdate >?";
+		Connection conn = ConnectionSingleton.getConnection();
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+			ps.setDate(1, new java.sql.Date(min.getTime()));
+			ps.setDate(2, new java.sql.Date(max.getTime()));
+			ps.executeUpdate();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public Map<String,Integer> getStockTotalDatesGroup()
+	{
+		//myLog.info("get all stock names ...");
+		Map<String,Integer> retMap = new HashMap<>();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		try
+		{
+			stmt = conn.createStatement();
+			String sql;
+			sql = " SELECT stockName, COUNT(stockName) as cs " 
+				+ " FROM " + MyConstants.TABLE_STOCK_RECORDS  
+				+ " GROUP BY stockName " 
+				+ " ORDER BY cs desc " ;
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				// Retrieve by column name
+				String stockName = rs.getString("stockName");
+				int cs = rs.getInt("cs");
+				retMap.put(stockName, cs);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally
+		{
+			// finally block used to close resources
+			try
+			{
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
+			{
+			} // nothing we can do
+		} // end try
+		
+		return retMap;
 	}
 	
 	@Override
@@ -324,6 +743,47 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		
 	}
 
+	@Override
+	public void saveBatchReturnRate(List<StockReturnRate> lstReturnRate)
+	{
+		String sql = " insert into " + MyConstants.TABLE_STOCK_RETURN 
+				+" (symbol, tdate, returnRate) "
+				+" values (?, ?, ?) ";
+		Connection conn = ConnectionSingleton.getConnection();
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+	
+			for (StockReturnRate obj: lstReturnRate) 
+			{
+				ps.setString(1, obj.getSymbol());
+				ps.setDate(2, new java.sql.Date(obj.getTdate().getTime()));
+				ps.setDouble(3, obj.getReturnRate());
+				ps.addBatch();
+			}
+			
+			ps.executeBatch();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	@Override
 	public List<JaccardBean> getJaccardData(String stockName)
@@ -473,6 +933,50 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		return retList;
 	}
 
+	@Override
+	public List<Date> getTradingDates(String stockName)
+	{
+		myLog.info("----->Get Trading Dates List by stockName..." + stockName); 
+		
+		List<Date> retList = new ArrayList<>();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		try
+		{
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT t.tdate as myDate "
+					+ " FROM " + MyConstants.TABLE_STOCK_RECORDS + " t "
+					+ " WHERE t.stockName='"+stockName+"'"
+					+ " GROUP BY t.tdate "
+					+ " ORDER BY t.tdate ASC ";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				Date myDate = rs.getDate("myDate");
+				retList.add(myDate);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			try
+			{
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
+			{
+			} // nothing we can do
+		} // end try
+		return retList;
+	}
+	
 	@Override
 	public void truncateTable(String tableName)
 	{
@@ -1196,64 +1700,64 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 	@Override
 	public Weight getWeights(String stockName, String peerName)
 	{
-			//myLog.info("get peer weight of one stock with a peer: "+stockName + " peer: "+ peerName);
-			Weight retValue = new Weight();
-			Connection conn = ConnectionSingleton.getConnection();
-			Statement stmt = null;
+		//myLog.info("get peer weight of one stock with a peer: "+stockName + " peer: "+ peerName);
+		Weight retValue = new Weight();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		try
+		{
+			stmt = conn.createStatement();
+			String sql;
+			
+			int id;
+			String stock_name;
+			String peer_name;
+			float eduDistance;
+			float proxi;
+			float weight;
+			
+			sql = " SELECT id, stock_name,peer_name,eduDistance, proxi, weight "
+				+ " FROM " + MyConstants.TABLE_WEIGHTS 
+				+ " WHERE stock_name='"+stockName+"'"
+				+ " AND peer_name='"+peerName+"'";
+				
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				id = rs.getInt("id");
+				stock_name = rs.getString("stock_name");
+				peer_name = rs.getString("peer_name");
+				eduDistance = rs.getFloat("eduDistance");
+				proxi = rs.getFloat("proxi");
+				weight = rs.getFloat("weight");
+				
+				retValue.setId(id);
+				retValue.setStock_name(stock_name);
+				retValue.setPeer_name(peer_name);
+				retValue.setEduDistance(eduDistance);
+				retValue.setProxi(proxi);
+				retValue.setWeight(weight);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		} finally
+		{
 			try
 			{
-				stmt = conn.createStatement();
-				String sql;
-				
-				int id;
-				String stock_name;
-				String peer_name;
-				float eduDistance;
-				float proxi;
-				float weight;
-				
-				sql = " SELECT id, stock_name,peer_name,eduDistance, proxi, weight "
-					+ " FROM " + MyConstants.TABLE_WEIGHTS 
-					+ " WHERE stock_name='"+stockName+"'"
-					+ " AND peer_name='"+peerName+"'";
-					
-				ResultSet rs = stmt.executeQuery(sql);
-				while (rs.next())
-				{
-					id = rs.getInt("id");
-					stock_name = rs.getString("stock_name");
-					peer_name = rs.getString("peer_name");
-					eduDistance = rs.getFloat("eduDistance");
-					proxi = rs.getFloat("proxi");
-					weight = rs.getFloat("weight");
-					
-					retValue.setId(id);
-					retValue.setStock_name(stock_name);
-					retValue.setPeer_name(peer_name);
-					retValue.setEduDistance(eduDistance);
-					retValue.setProxi(proxi);
-					retValue.setWeight(weight);
-				}
-				rs.close();
-				stmt.close();
-			} catch (SQLException se)
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
 			{
-				se.printStackTrace();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			} finally
-			{
-				try
-				{
-					if (stmt != null)
-						stmt.close();
-				} catch (SQLException se2)
-				{
-				}
-			} // end try
-			
-			return retValue;
+			}
+		} // end try
+		
+		return retValue;
 	}
 	
 	@Override
@@ -1336,7 +1840,7 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		}
 		
 	}
-
+	
 	@Override
 	public void insertCellsDistance(List<CellsDistance> saveList)
 	{
@@ -1383,5 +1887,64 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		
 	}
 	
-	
+	@Override
+	public List<StockReturnRate> getReturnRateByDateSector(StockReturnRate self, Date tempDate, String sector)
+	{
+		List<StockReturnRate> retList = new ArrayList<>();
+		Connection conn = ConnectionSingleton.getConnection();
+		Statement stmt = null;
+		String sql;
+		sql = " SELECT t1.rid as rid, t1.symbol as symbol, t1.returnRate as returnRate, t1.tdate as tdate"
+			+ " FROM " + MyConstants.TABLE_STOCK_RETURN + " t1," + MyConstants.TABLE_STOCK_NAME +" t2"
+			+ " WHERE t1.symbol = t2.symbol "
+			+ " AND t2.sector='"+sector+"'"
+			+ " AND t1.tdate='"+ DateUtil.getDate(tempDate)+"'";
+		try
+		{
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next())
+			{
+				// Retrieve by column name
+				int rid = rs.getInt("rid");
+				String symbol = rs.getString("symbol");
+				float returnRate  = rs.getFloat("returnRate");
+				Date tdate = rs.getDate("tdate");
+				StockReturnRate obj = new StockReturnRate();
+				obj.setRid(rid);
+				obj.setSymbol(symbol);
+				obj.setTdate(tempDate);
+				obj.setReturnRate(returnRate);
+				if (self.getSymbol().equals(obj.getSymbol()))
+				{
+					self.setRid(obj.getRid());
+					self.setSymbol(obj.getSymbol());
+					self.setTdate(obj.getTdate());
+					self.setReturnRate(obj.getReturnRate());
+				}
+				retList.add(obj);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException se)
+		{
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e)
+		{
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally
+		{
+			// finally block used to close resources
+			try
+			{
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2)
+			{
+			} // nothing we can do
+		} // end try
+		return retList;
+	}
 }

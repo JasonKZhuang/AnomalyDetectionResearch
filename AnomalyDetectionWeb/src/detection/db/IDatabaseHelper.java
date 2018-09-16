@@ -1,11 +1,16 @@
 package detection.db;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import detection.beans.DividedStockWindow;
 import detection.beans.JaccardBean;
 import detection.beans.StockKNNBean;
+import detection.beans.StockName;
 import detection.beans.StockRecord;
+import detection.beans.StockReturnRate;
+import detection.beans.StockWithNNBean;
 import detection.beans.kim.CellsDistance;
 import detection.beans.kim.PeerGroup;
 import detection.beans.kim.PeerGroupBean;
@@ -14,10 +19,67 @@ import detection.beans.kim.Weight;
 public interface IDatabaseHelper
 {
 	/**
+	 * insert all stocks name into stockname table
+	 * @param nameList
+	 */
+	public void insertName(List<String> nameList);
+	
+	/**
+	 * insert records
+	 * @param stockName
+	 * @param records
+	 */
+	public void insertRecords(String stockName, List<StockRecord> records);
+	
+	/**
 	 * get all stock name
 	 * @return
 	 */
 	public List<String> getStockNames();
+	
+	/**
+	 * get all stock objects
+	 * @return
+	 */
+	public List<StockName> getAllStocks();
+	
+	/**
+	 * get stockname objects by sector
+	 * @param sector
+	 * @return
+	 */
+	public List<StockName> getStocksBySector(String sector);
+	
+	/**
+	 * delete a stock name by record id
+	 * @param id
+	 */
+	public void deleStockNameById(int id);
+	
+	/**
+	 * delete a stock name by symbol
+	 * @param id
+	 */
+	public void deleStockNameAndRecordsBySymbol(String symbol);
+	
+	/**
+	 * update all stocks' detail including caplisation and sector
+	 * @param stocksDetailFromFile
+	 */
+	public void updateStockDetail(List<StockName> stocksDetailFromFile);
+	
+	/**
+	 * get rid of unavailable data
+	 * @param stocksDetailFromFile
+	 */
+	public void trimDateDurationOfRecords(Date min, Date max);
+	
+	/**
+	 * get statistic of group stock records
+	 * in order to get rid of the stock which is less the specific number
+	 * @return
+	 */
+	public Map<String,Integer> getStockTotalDatesGroup();
 	
 	/**
 	 * get Stock list by stock name
@@ -50,6 +112,12 @@ public interface IDatabaseHelper
 	public List<StockRecord> getRecordByNameAndDate(String aName, String sDate, String eDate);
 
 	/**
+	 * save return rate to table batch
+	 * @param lstReturnRate
+	 */
+	public void saveBatchReturnRate(List<StockReturnRate> lstReturnRate);
+	
+	/**
 	 * get Jaccard  index datalist by a stock name
 	 * @param stockName
 	 * @return
@@ -68,6 +136,12 @@ public interface IDatabaseHelper
 	 * @return
 	 */
 	public List<String> getTransactionDates();
+	
+	/**
+	 * Get all time windows new method
+	 * @return
+	 */
+	public List<Date> getTradingDates(String stockName);
 	
 	/**
 	 * empty the table
@@ -198,8 +272,13 @@ public interface IDatabaseHelper
 	 */
 	public void insertCellsDistance(List<CellsDistance> saveList);
 
-	
-	
 	///======================================================///
+	public List<StockReturnRate> getReturnRateByDateSector(StockReturnRate self,Date tempDate, String sector);
+
+	
+
+	
+	
+	
 	
 }

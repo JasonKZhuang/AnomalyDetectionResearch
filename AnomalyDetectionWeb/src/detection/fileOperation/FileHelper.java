@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import detection.beans.StockName;
 import detection.beans.StockRecord;
 import detection.utility.DateUtil;
 
@@ -70,7 +71,7 @@ public class FileHelper implements IFileHelper
 				
 				try 
 				{
-					record.setTdate(DateUtil.convertStringToDate(arrayLine[0]));
+					record.setTdate(DateUtil.convertStringToDate(arrayLine[0].trim()));
 				}catch(Exception exp)
 				{
 					record.setTdate(null);
@@ -125,6 +126,84 @@ public class FileHelper implements IFileHelper
 		return retList;
 	}
 
+	@Override
+	public List<StockName> getStocksDetailFromFile(File file)
+	{
+		List<StockName> retList = new ArrayList<>();
+		BufferedReader br = null;
+		try
+		{
+			br = new BufferedReader(new FileReader(file));
+			// =================================//
+			String line;
+			br.readLine();
+			int i=0;
+			while ((line = br.readLine()) != null)
+			{
+				//line = line.replace(", Inc.", " Inc.");
+				//line = line.replace(", Incorporated.", " Incorporated");
+				
+				//line = line.replace("\"", "");
+				line = line.substring(1, line.length()-2);
+				String[] data = line.split("\",\"");
+				StockName sn = new StockName();
+				//0
+				sn.setSymbol(data[0]);
+				//1
+				sn.setRealName(data[1]);
+				//2
+				//3
+				String marketCap = data[3];
+				double d_cap  = 0d;
+				try
+				{
+					if (marketCap.equals("n/a"))
+					{
+						System.out.println("null...n/a");
+					}
+					 d_cap  = Double.parseDouble(marketCap);
+				}catch (Exception exp)
+				{
+					exp.printStackTrace();
+					d_cap = 0;
+				}
+				
+				sn.setMarketCap(d_cap);
+				//4
+				//5
+				//6
+				sn.setSector(data[6]);
+				//7
+				sn.setIndustryGroup(data[7]);
+				retList.add(sn);
+				i++;
+			}
+			// =================================//
+		} catch (Exception exp)
+		{
+			exp.printStackTrace();
+		} finally
+		{
+			if (br != null)
+			{
+				try
+				{
+					br.close();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return retList;
+		
+	}
+
+	
+	
+	
+	
 	public void ReadStringFromFileLineByLine(String fileName)
 	{
 		try
@@ -148,4 +227,5 @@ public class FileHelper implements IFileHelper
 		}
 	}
 
+	
 }

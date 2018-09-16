@@ -8,6 +8,7 @@ public class JaccardBean
 	private String stockName;
 	private Date tdate;
 	private float jaccard;
+	
 	public long getId()
 	{
 		return id;
