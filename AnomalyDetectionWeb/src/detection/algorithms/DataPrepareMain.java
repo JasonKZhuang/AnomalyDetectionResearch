@@ -20,7 +20,8 @@ import detection.utility.MyConstants;
 
 public class DataPrepareMain
 {
-	private String path ="/Users/jason/Documents/JasonProjects/GitHubProject/AnomalyDetectionResearch/AnomalyDetectionWeb/Data/";
+	//private String path ="/Users/jason/Documents/JasonProjects/GitHubProject/AnomalyDetectionResearch/AnomalyDetectionWeb/Data/";
+	private String path ="D:\\GitHub\\Data";
 	private static IFileHelper fileHelper;
 	private static IDatabaseHelper dbHelper;
 	
@@ -38,6 +39,9 @@ public class DataPrepareMain
 		myApp.cleanStockRecords();
         //======//
         myApp.calculateReturnRate();
+        //========///
+        
+        
 	}
 	
 	/**
