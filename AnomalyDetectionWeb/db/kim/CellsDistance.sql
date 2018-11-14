@@ -1,0 +1,31 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : MacBook
+Source Server Version : 50722
+Source Host           : 10.0.0.5:3306
+Source Database       : myProject
+
+Target Server Type    : MYSQL
+Target Server Version : 50722
+File Encoding         : 65001
+
+Date: 2018-10-05 12:10:31
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for CellsDistance
+-- ----------------------------
+DROP TABLE IF EXISTS anomalyresearch.`kim_CellsDistance`;
+CREATE TABLE anomalyresearch.`kim_CellsDistance` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `stock_name` varchar(45) NOT NULL,
+  `window_no` int(11) NOT NULL,
+  `peer_name` varchar(45) DEFAULT NULL,
+  `peer_avg` decimal(12,4) DEFAULT NULL,
+  `peer_mean` decimal(12,4) DEFAULT NULL,
+  `difference` decimal(12,4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

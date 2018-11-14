@@ -173,9 +173,9 @@ public class DataPrepareMain
 		for (StockName sn : lstStockNames)
 		{
 			List<StockRecord> records = dbHelper.getRecordByName(sn.getSymbol());
-			float preValue = 0f;
-			float curValue = 0f;
-			float returnRate  = 0f;
+			double preValue = 0f;
+			double curValue = 0f;
+			double returnRate  = 0f;
 			List<StockReturnRate> lstReturnRate = new ArrayList<>();
 			
 			for(int i=0;i<records.size();i++)

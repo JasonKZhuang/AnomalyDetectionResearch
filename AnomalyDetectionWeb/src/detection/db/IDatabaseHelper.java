@@ -19,6 +19,11 @@ import detection.beans.kim.Weight;
 public interface IDatabaseHelper
 {
 	/**
+	 *select distinct stockname from anomalyresearch.kim_stockrecords;
+	 */
+	public void insertName();
+	
+	/**
 	 * insert all stocks name into stockname table
 	 * @param nameList
 	 */
@@ -30,6 +35,12 @@ public interface IDatabaseHelper
 	 * @param records
 	 */
 	public void insertRecords(String stockName, List<StockRecord> records);
+	
+	/**
+	 * @param stockName
+	 * @param records
+	 */
+	public void insertRecords(List<StockRecord> records);
 	
 	/**
 	 * get all stock name

@@ -7,7 +7,7 @@ public class StockReturnRate
 	private int rid;
 	private String symbol;
 	private Date   tdate;
-	private float returnRate;
+	private double returnRate;
 	
 	
 	public int getRid()
@@ -34,11 +34,11 @@ public class StockReturnRate
 	{
 		this.tdate = tdate;
 	}
-	public float getReturnRate()
+	public double getReturnRate()
 	{
 		return returnRate;
 	}
-	public void setReturnRate(float returnRate)
+	public void setReturnRate(double returnRate)
 	{
 		this.returnRate = returnRate;
 	}

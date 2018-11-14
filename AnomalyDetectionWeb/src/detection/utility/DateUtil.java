@@ -10,9 +10,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 日期转换类 转换一个 java.util.Date 对象到一个字符串以及 一个字符串到一个 java.util.Date 对象. 庄开智添加：
- * 判断指定日期的年份是否是闰年 取得指定日期的所处星期的第一天 取得指定日期的所处星期的最后一天 取得指定日期的所处月份的第一天
- * 取得指定日期的所处月份的最后一天 结束庄开智添加
+ * æ—¥æœŸè½¬æ�¢ç±» è½¬æ�¢ä¸€ä¸ª java.util.Date å¯¹è±¡åˆ°ä¸€ä¸ªå­—ç¬¦ä¸²ä»¥å�Š ä¸€ä¸ªå­—ç¬¦ä¸²åˆ°ä¸€ä¸ª java.util.Date å¯¹è±¡. åº„å¼€æ™ºæ·»åŠ ï¼š
+ * åˆ¤æ–­æŒ‡å®šæ—¥æœŸçš„å¹´ä»½æ˜¯å�¦æ˜¯é—°å¹´ å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æ˜ŸæœŸçš„ç¬¬ä¸€å¤© å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æ˜ŸæœŸçš„æœ€å�Žä¸€å¤© å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„ç¬¬ä¸€å¤©
+ * å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„æœ€å�Žä¸€å¤© ç»“æ�Ÿåº„å¼€æ™ºæ·»åŠ 
  * 
  */
 public class DateUtil
@@ -26,21 +26,12 @@ public class DateUtil
 
 	private static String datetimePattern = datePattern + " " + timePattern;
 
-	/**
-	 * Return 缺省的日期格式 (yyyy-MM-dd)
-	 * 
-	 * @return 在页面中显示的日期格式
-	 */
+	
 	public static String getDatePattern()
 	{
 		return datePattern;
 	}
 
-	/**
-	 * 根据日期格式，返回日期按datePattern格式转换后的字符串
-	 * @param aDate  日期对象
-	 * @return 格式化后的日期的页面显示字符串
-	 */
 	public static final String getDate(Date aDate)
 	{
 		SimpleDateFormat df = null;
@@ -55,17 +46,6 @@ public class DateUtil
 		return (returnValue);
 	}
 
-	/**
-	 * 按照日期格式，将字符串解析为日期对象
-	 * 
-	 * @param aMask
-	 *            输入字符串的格式
-	 * @param strDate
-	 *            一个按aMask格式排列的日期的字符串描述
-	 * @return Date 对象
-	 * @see java.text.SimpleDateFormat
-	 * @throws ParseException
-	 */
 	public static final Date convertStringToDate(String aMask, String strDate)
 			throws ParseException
 	{
@@ -97,7 +77,6 @@ public class DateUtil
 
 	/**
 	 * This method returns the current date in the format: yyyy-MM-dd
-	 * 
 	 * @return the current date
 	 * @throws ParseException
 	 */
@@ -115,18 +94,6 @@ public class DateUtil
 		return cal;
 	}
 
-	/**
-	 * This method generates a string representation of a date's date/time in
-	 * the format you specify on input
-	 * 
-	 * @param aMask
-	 *            参数模板为用户自定义模板例如:yyyy-MM-dd HH:mm:SS
-	 * @param aDate
-	 *            日期对象
-	 * @return 返回一个根据模板将日期类型转换的字符串
-	 * 
-	 * @see java.text.SimpleDateFormat
-	 */
 	public static final String getDateTime(String aMask, Date aDate)
 	{
 		SimpleDateFormat df = null;
@@ -144,12 +111,6 @@ public class DateUtil
 		return (returnValue);
 	}
 
-	/***************************************************************************
-	 * 将日期对象转换成代年日月时分的字符串格式
-	 * 
-	 * @param aDate日期类型
-	 * @return 返回类型为String 格式为yyyy-MM-dd HH:mm
-	 */
 	public static final String getDateTime(Date aDate)
 	{
 		SimpleDateFormat df = new SimpleDateFormat(datetimePattern);
@@ -165,26 +126,11 @@ public class DateUtil
 		return (returnValue);
 	}
 
-	/**
-	 * 根据日期格式，返回日期按datePattern格式转换后的字符串
-	 * 
-	 * @param aDate
-	 * @return
-	 */
 	public static final String convertDateToString(Date aDate)
 	{
 		return getDateTime(datePattern, aDate);
 	}
 
-	/**
-	 * 按照日期格式，将字符串解析为日期对象
-	 * 
-	 * @param strDate(格式
-	 *            yyyy-MM-dd)
-	 * @return
-	 * 
-	 * @throws ParseException
-	 */
 	public static Date convertStringToDate(String strDate)
 			throws ParseException
 	{
@@ -210,17 +156,6 @@ public class DateUtil
 		return aDate;
 	}
 
-	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝庄开智添加＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝//
-	/**
-	 * 按照日期格式，将字符串解析为日期对象
-	 * 
-	 * @param strDate(格式
-	 *            yyyy-MM-dd HH:mm)
-	 * @return
-	 * @throws ParseException
-	 * 
-	 * @throws ParseException
-	 */
 	public static Date convertStringToDateTime(String strDate)
 			throws ParseException
 	{
@@ -246,9 +181,6 @@ public class DateUtil
 		return aDate;
 	}
 
-	/**
-	 * 判断指定日期的年份是否是闰年
-	 */
 	public static boolean isLeapYear()
 	{
 		Calendar cal = Calendar.getInstance();
@@ -258,10 +190,6 @@ public class DateUtil
 
 	public static boolean isLeapYear(int year)
 	{
-		/**
-		 * 详细设计： 1.被400整除是闰年，否则： 2.不能被4整除则不是闰年 3.能被4整除同时不能被100整除则是闰年
-		 * 3.能被4整除同时能被100整除则不是闰年
-		 */
 		if ((year % 400) == 0)
 			return true;
 		else if ((year % 4) == 0)
@@ -274,18 +202,8 @@ public class DateUtil
 			return false;
 	}
 
-	/**
-	 * 判断指定日期的年份是否是闰年
-	 * 
-	 * @param date指定日期。
-	 * @return 是否闰年
-	 */
 	public static boolean isLeapYear(Date date)
 	{
-		/**
-		 * 详细设计： 1.被400整除是闰年，否则： 2.不能被4整除则不是闰年 3.能被4整除同时不能被100整除则是闰年
-		 * 3.能被4整除同时能被100整除则不是闰年
-		 */
 
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -295,28 +213,12 @@ public class DateUtil
 
 	public static boolean isLeapYear(Calendar gc)
 	{
-		/**
-		 * 详细设计： 1.被400整除是闰年，否则： 2.不能被4整除则不是闰年 3.能被4整除同时不能被100整除则是闰年
-		 * 3.能被4整除同时能被100整除则不是闰年
-		 */
 		int year = gc.get(Calendar.YEAR);
 		return isLeapYear(year);
 	}
 
-	// －－－－－－－－－－－－－－－－－－－与星期有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
-	/**
-	 * 取得指定日期的所处星期的第一天
-	 * 
-	 * @param date指定日期。
-	 * @return 指定日期的所处星期的第一天
-	 */
 	public static Date getFirstDayOfWeek(Date date)
 	{
-		/**
-		 * 详细设计： 1.如果date是星期日，则减0天 2.如果date是星期一，则减1天 3.如果date是星期二，则减2天
-		 * 4.如果date是星期三，则减3天 5.如果date是星期四，则减4天 6.如果date是星期五，则减5天
-		 * 7.如果date是星期六，则减6天
-		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
 		switch (gc.get(Calendar.DAY_OF_WEEK))
@@ -346,19 +248,8 @@ public class DateUtil
 		return gc.getTime();
 	}
 
-	/**
-	 * 取得指定日期的所处星期的第一天
-	 * 
-	 * @param gc参数为Calendar类型
-	 * @return 指定日期的所处星期的第一天
-	 */
 	public static Calendar getFirstDayOfWeek(Calendar gc)
 	{
-		/**
-		 * 详细设计： 1.如果date是星期日，则减0天 2.如果date是星期一，则减1天 3.如果date是星期二，则减2天
-		 * 4.如果date是星期三，则减3天 5.如果date是星期四，则减4天 6.如果date是星期五，则减5天
-		 * 7.如果date是星期六，则减6天
-		 */
 		switch (gc.get(Calendar.DAY_OF_WEEK))
 		{
 		case (Calendar.SUNDAY  ):
@@ -386,20 +277,8 @@ public class DateUtil
 		return gc;
 	}
 
-	/**
-	 * 取得指定日期的所处星期的最后一天
-	 * 
-	 * @param date
-	 *            指定日期。
-	 * @return Date类型 指定日期的所处星期的最后一天
-	 */
 	public static Date getLastDayOfWeek(Date date)
 	{
-		/**
-		 * 详细设计： 1.如果date是星期日，则加6天 2.如果date是星期一，则加5天 3.如果date是星期二，则加4天
-		 * 4.如果date是星期三，则加3天 5.如果date是星期四，则加2天 6.如果date是星期五，则加1天
-		 * 7.如果date是星期六，则加0天
-		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
 		switch (gc.get(Calendar.DAY_OF_WEEK))
@@ -429,17 +308,10 @@ public class DateUtil
 		return gc.getTime();
 	}
 
-	/**
-	 * 取得指定日期的下一个星期的第一天
-	 * 
-	 * @param date
-	 *            指定日期。
-	 * @return Date类型 指定日期的下一个星期的第一天
-	 */
 	public static Date getFirstDayOfNextWeek(Date date)
 	{
 		/**
-		 * 详细设计： 1.调用getNextWeek设置当前时间 2.以1为基础，调用getFirstDayOfWeek
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextWeekè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getFirstDayOfWeek
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -449,16 +321,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个星期的第一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸçš„ç¬¬ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return Calendar类型 指定日期的下一个星期的第一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return Calendarç±»åž‹ æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸçš„ç¬¬ä¸€å¤©
 	 */
 	public static Calendar getFirstDayOfNextWeek(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.调用getNextWeek设置当前时间 2.以1为基础，调用getFirstDayOfWeek
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextWeekè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getFirstDayOfWeek
 		 */
 		gc.setTime(DateUtil.getNextWeek(gc.getTime()));
 		gc.setTime(DateUtil.getFirstDayOfWeek(gc.getTime()));
@@ -466,16 +338,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个星期的最后一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸçš„æœ€å�Žä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一个星期的最后一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸçš„æœ€å�Žä¸€å¤©
 	 */
 	public static Date getLastDayOfNextWeek(Date date)
 	{
 		/**
-		 * 详细设计： 1.调用getNextWeek设置当前时间 2.以1为基础，调用getLastDayOfWeek
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextWeekè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getLastDayOfWeek
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -485,16 +357,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个星期
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸ
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一个星期
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæ˜ŸæœŸ
 	 */
 	public static Date getNextWeek(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期加7天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸåŠ 7å¤©
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -505,23 +377,23 @@ public class DateUtil
 	public static Calendar getNextWeek(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期加7天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸåŠ 7å¤©
 		 */
 		gc.add(Calendar.DATE, 7);
 		return gc;
 	}
 
 	/**
-	 * 取得指定日期的上一个星期
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸Šä¸€ä¸ªæ˜ŸæœŸ
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的上一个星期
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸Šä¸€ä¸ªæ˜ŸæœŸ
 	 */
 	public static Date getPreviousWeek(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期减7天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸå‡�7å¤©
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -532,17 +404,17 @@ public class DateUtil
 	public static Calendar getPreviousWeek(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期减7天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸå‡�7å¤©
 		 */
 		gc.add(Calendar.DATE, -7);
 		return gc;
 	}
 
 	/***************************************************************************
-	 * 获得给定日期所在的星期几
+	 * èŽ·å¾—ç»™å®šæ—¥æœŸæ‰€åœ¨çš„æ˜ŸæœŸå‡ 
 	 * 
 	 * @param date
-	 * @return 整数类型
+	 * @return æ•´æ•°ç±»åž‹
 	 */
 	public static int getWeekForDate(Date date)
 	{
@@ -553,30 +425,30 @@ public class DateUtil
 	}
 
 	/***************************************************************************
-	 * 获得给定日期所在的星期几
+	 * èŽ·å¾—ç»™å®šæ—¥æœŸæ‰€åœ¨çš„æ˜ŸæœŸå‡ 
 	 * 
 	 * @param Calendar
-	 * @return 整数类型
+	 * @return æ•´æ•°ç±»åž‹
 	 */
 	public static int getWeekForDate(Calendar gc)
 	{
 		return gc.get(Calendar.DAY_OF_WEEK) - 1;
 	}
 
-	// end－－－－－－－－－－－－－－－－－－－与星期有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
+	// endï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ä¸Žæ˜ŸæœŸæœ‰å…³çš„æ–¹æ³•ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�//
 
-	// －－－－－－－－－－－－－－－－－－－与月份有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
+	// ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ä¸Žæœˆä»½æœ‰å…³çš„æ–¹æ³•ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�//
 	/**
-	 * 取得指定日期的所处月份的第一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„ç¬¬ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return Date类型指定日期的所处月份的第一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return Dateç±»åž‹æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„ç¬¬ä¸€å¤©
 	 */
 	public static Date getFirstDayOfMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.设置为1号
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è®¾ç½®ä¸º1å�·
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -585,36 +457,36 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的所处月份的第一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„ç¬¬ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return Calendar类型 指定日期的所处月份的第一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return Calendarç±»åž‹ æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„ç¬¬ä¸€å¤©
 	 */
 	public static Calendar getFirstDayOfMonth(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.设置为1号
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è®¾ç½®ä¸º1å�·
 		 */
 		gc.set(Calendar.DAY_OF_MONTH, 1);
 		return gc;
 	}
 
 	/**
-	 * 取得指定日期的所处月份的最后一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„æœ€å�Žä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期
-	 * @return 日期类型 指定日期的所处月份的最后一天
+	 *            æŒ‡å®šæ—¥æœŸ
+	 * @return æ—¥æœŸç±»åž‹ æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„æœ€å�Žä¸€å¤©
 	 */
 	public static Date getLastDayOfMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.如果date在1月，则为31日 2.如果date在2月，则为28日 3.如果date在3月，则为31日
-		 * 4.如果date在4月，则为30日 5.如果date在5月，则为31日 6.如果date在6月，则为30日
-		 * 7.如果date在7月，则为31日 8.如果date在8月，则为31日 9.如果date在9月，则为30日
-		 * 10.如果date在10月，则为31日 11.如果date在11月，则为30日 12.如果date在12月，则为31日
-		 * 1.如果date在闰年的2月，则为29日
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.å¦‚æžœdateåœ¨1æœˆï¼Œåˆ™ä¸º31æ—¥ 2.å¦‚æžœdateåœ¨2æœˆï¼Œåˆ™ä¸º28æ—¥ 3.å¦‚æžœdateåœ¨3æœˆï¼Œåˆ™ä¸º31æ—¥
+		 * 4.å¦‚æžœdateåœ¨4æœˆï¼Œåˆ™ä¸º30æ—¥ 5.å¦‚æžœdateåœ¨5æœˆï¼Œåˆ™ä¸º31æ—¥ 6.å¦‚æžœdateåœ¨6æœˆï¼Œåˆ™ä¸º30æ—¥
+		 * 7.å¦‚æžœdateåœ¨7æœˆï¼Œåˆ™ä¸º31æ—¥ 8.å¦‚æžœdateåœ¨8æœˆï¼Œåˆ™ä¸º31æ—¥ 9.å¦‚æžœdateåœ¨9æœˆï¼Œåˆ™ä¸º30æ—¥
+		 * 10.å¦‚æžœdateåœ¨10æœˆï¼Œåˆ™ä¸º31æ—¥ 11.å¦‚æžœdateåœ¨11æœˆï¼Œåˆ™ä¸º30æ—¥ 12.å¦‚æžœdateåœ¨12æœˆï¼Œåˆ™ä¸º31æ—¥
+		 * 1.å¦‚æžœdateåœ¨é—°å¹´çš„2æœˆï¼Œåˆ™ä¸º29æ—¥
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -657,7 +529,7 @@ public class DateUtil
 			gc.set(Calendar.DAY_OF_MONTH, 31);
 			break;
 		}
-		// 检查闰年
+		// æ£€æŸ¥é—°å¹´
 		if ((gc.get(Calendar.MONTH) == Calendar.FEBRUARY)
 				&& (isLeapYear(gc.get(Calendar.YEAR))))
 		{
@@ -667,20 +539,20 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的所处月份的最后一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„æœ€å�Žä¸€å¤©
 	 * 
 	 * @param Calendar
-	 *            指定日期日历
-	 * @return Calendar类型指定日期的所处月份的最后一天
+	 *            æŒ‡å®šæ—¥æœŸæ—¥åŽ†
+	 * @return Calendarç±»åž‹æŒ‡å®šæ—¥æœŸçš„æ‰€å¤„æœˆä»½çš„æœ€å�Žä¸€å¤©
 	 */
 	public static Calendar getLastDayOfMonth(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.如果date在1月，则为31日 2.如果date在2月，则为28日 3.如果date在3月，则为31日
-		 * 4.如果date在4月，则为30日 5.如果date在5月，则为31日 6.如果date在6月，则为30日
-		 * 7.如果date在7月，则为31日 8.如果date在8月，则为31日 9.如果date在9月，则为30日
-		 * 10.如果date在10月，则为31日 11.如果date在11月，则为30日 12.如果date在12月，则为31日
-		 * 1.如果date在闰年的2月，则为29日
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.å¦‚æžœdateåœ¨1æœˆï¼Œåˆ™ä¸º31æ—¥ 2.å¦‚æžœdateåœ¨2æœˆï¼Œåˆ™ä¸º28æ—¥ 3.å¦‚æžœdateåœ¨3æœˆï¼Œåˆ™ä¸º31æ—¥
+		 * 4.å¦‚æžœdateåœ¨4æœˆï¼Œåˆ™ä¸º30æ—¥ 5.å¦‚æžœdateåœ¨5æœˆï¼Œåˆ™ä¸º31æ—¥ 6.å¦‚æžœdateåœ¨6æœˆï¼Œåˆ™ä¸º30æ—¥
+		 * 7.å¦‚æžœdateåœ¨7æœˆï¼Œåˆ™ä¸º31æ—¥ 8.å¦‚æžœdateåœ¨8æœˆï¼Œåˆ™ä¸º31æ—¥ 9.å¦‚æžœdateåœ¨9æœˆï¼Œåˆ™ä¸º30æ—¥
+		 * 10.å¦‚æžœdateåœ¨10æœˆï¼Œåˆ™ä¸º31æ—¥ 11.å¦‚æžœdateåœ¨11æœˆï¼Œåˆ™ä¸º30æ—¥ 12.å¦‚æžœdateåœ¨12æœˆï¼Œåˆ™ä¸º31æ—¥
+		 * 1.å¦‚æžœdateåœ¨é—°å¹´çš„2æœˆï¼Œåˆ™ä¸º29æ—¥
 		 */
 		switch (gc.get(Calendar.MONTH))
 		{
@@ -721,7 +593,7 @@ public class DateUtil
 			gc.set(Calendar.DAY_OF_MONTH, 31);
 			break;
 		}
-		// 检查闰年
+		// æ£€æŸ¥é—°å¹´
 		if ((gc.get(Calendar.MONTH) == Calendar.FEBRUARY)
 				&& (isLeapYear(gc.get(Calendar.YEAR))))
 		{
@@ -731,16 +603,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个月的第一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆçš„ç¬¬ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一个月的第一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆçš„ç¬¬ä¸€å¤©
 	 */
 	public static Date getFirstDayOfNextMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.调用getNextMonth设置当前时间 2.以1为基础，调用getFirstDayOfMonth
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextMonthè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getFirstDayOfMonth
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -752,7 +624,7 @@ public class DateUtil
 	public static Calendar getFirstDayOfNextMonth(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.调用getNextMonth设置当前时间 2.以1为基础，调用getFirstDayOfMonth
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextMonthè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getFirstDayOfMonth
 		 */
 		gc.setTime(DateUtil.getNextMonth(gc.getTime()));
 		gc.setTime(DateUtil.getFirstDayOfMonth(gc.getTime()));
@@ -760,16 +632,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个月的最后一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆçš„æœ€å�Žä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一个月的最后一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆçš„æœ€å�Žä¸€å¤©
 	 */
 	public static Date getLastDayOfNextMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.调用getNextMonth设置当前时间 2.以1为基础，调用getLastDayOfMonth
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.è°ƒç”¨getNextMonthè®¾ç½®å½“å‰�æ—¶é—´ 2.ä»¥1ä¸ºåŸºç¡€ï¼Œè°ƒç”¨getLastDayOfMonth
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -779,16 +651,16 @@ public class DateUtil
 	}
 
 	/**
-	 * 取得指定日期的下一个月
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆ
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一个月
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€ä¸ªæœˆ
 	 */
 	public static Date getNextMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期的月份加1
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸçš„æœˆä»½åŠ 1
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -799,23 +671,23 @@ public class DateUtil
 	public static Calendar getNextMonth(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期的月份加1
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸçš„æœˆä»½åŠ 1
 		 */
 		gc.add(Calendar.MONTH, 1);
 		return gc;
 	}
 
 	/**
-	 * 取得指定日期的上一个月
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸Šä¸€ä¸ªæœˆ
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的上一个月
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸Šä¸€ä¸ªæœˆ
 	 */
 	public static Date getPreviousMonth(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期的月份减1
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸçš„æœˆä»½å‡�1
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -826,26 +698,26 @@ public class DateUtil
 	public static Calendar getPreviousMonth(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期的月份减1
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸçš„æœˆä»½å‡�1
 		 */
 		gc.add(Calendar.MONTH, -1);
 		return gc;
 	}
 
-	// end－－－－－－－－－－－－－－－－－－－与月份有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
+	// endï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ä¸Žæœˆä»½æœ‰å…³çš„æ–¹æ³•ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�//
 
-	// －－－－－－－－－－－－－－－－－－－与日期有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
+	// ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ä¸Žæ—¥æœŸæœ‰å…³çš„æ–¹æ³•ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�//
 	/**
-	 * 取得指定日期的下一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的下一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„ä¸‹ä¸€å¤©
 	 */
 	public static Date getNextDay(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期加1天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸåŠ 1å¤©
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -856,23 +728,23 @@ public class DateUtil
 	public static Calendar getNextDay(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期加1天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸåŠ 1å¤©
 		 */
 		gc.add(Calendar.DATE, 1);
 		return gc;
 	}
 
 	/**
-	 * 取得指定日期的前一天
+	 * å�–å¾—æŒ‡å®šæ—¥æœŸçš„å‰�ä¸€å¤©
 	 * 
 	 * @param date
-	 *            指定日期。
-	 * @return 指定日期的前一天
+	 *            æŒ‡å®šæ—¥æœŸã€‚
+	 * @return æŒ‡å®šæ—¥æœŸçš„å‰�ä¸€å¤©
 	 */
 	public static Date getPreviousDay(Date date)
 	{
 		/**
-		 * 详细设计： 1.指定日期减1天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸå‡�1å¤©
 		 */
 		GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 		gc.setTime(date);
@@ -883,14 +755,14 @@ public class DateUtil
 	public static Calendar getPreviousDay(Calendar gc)
 	{
 		/**
-		 * 详细设计： 1.指定日期减1天
+		 * è¯¦ç»†è®¾è®¡ï¼š 1.æŒ‡å®šæ—¥æœŸå‡�1å¤©
 		 */
 		gc.add(Calendar.DATE, -1);
 		return gc;
 	}
 
 	/**
-	 * 给定日期类型获得日期所在年
+	 * ç»™å®šæ—¥æœŸç±»åž‹èŽ·å¾—æ—¥æœŸæ‰€åœ¨å¹´
 	 */
 	public static String getYearForDateTime(Date date)
 	{
@@ -900,7 +772,7 @@ public class DateUtil
 	}
 
 	/***************************************************************************
-	 * 给定日期类型获得日期所在月份
+	 * ç»™å®šæ—¥æœŸç±»åž‹èŽ·å¾—æ—¥æœŸæ‰€åœ¨æœˆä»½
 	 * 
 	 * @param date
 	 * @return
@@ -913,7 +785,7 @@ public class DateUtil
 	}
 
 	/***************************************************************************
-	 * 给定日期类型获得日期所在日
+	 * ç»™å®šæ—¥æœŸç±»åž‹èŽ·å¾—æ—¥æœŸæ‰€åœ¨æ—¥
 	 * 
 	 * @param date
 	 * @return
@@ -926,7 +798,7 @@ public class DateUtil
 	}
 
 	/***************************************************************************
-	 * 给定日期类型获得日期所在时
+	 * ç»™å®šæ—¥æœŸç±»åž‹èŽ·å¾—æ—¥æœŸæ‰€åœ¨æ—¶
 	 * 
 	 * @param date
 	 * @return
@@ -945,10 +817,10 @@ public class DateUtil
 		return str_date.substring(14, 16);
 	}
 
-	// end－－－－－－－－－－－－－－－－－－与日期有关的方法－－－－－－－－－－－－－－－－－－－－－－－－//
+	// endï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ä¸Žæ—¥æœŸæœ‰å…³çš„æ–¹æ³•ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�ï¼�//
 
 	/**
-	 * 给定一个日期，返回加减n天后的日期，返回Date nDaysAfterOneDate
+	 * ç»™å®šä¸€ä¸ªæ—¥æœŸï¼Œè¿”å›žåŠ å‡�nå¤©å�Žçš„æ—¥æœŸï¼Œè¿”å›žDate nDaysAfterOneDate
 	 * 
 	 * @param basicDate
 	 *            Date
@@ -966,7 +838,7 @@ public class DateUtil
 	}
 
 	/**
-	 * 将String按照标准格式化成Date
+	 * å°†StringæŒ‰ç…§æ ‡å‡†æ ¼å¼�åŒ–æˆ�Date
 	 * 
 	 * @param value
 	 * @return
@@ -986,25 +858,25 @@ public class DateUtil
 				return df.parse((String) value);
 			} catch (Exception ex)
 			{
-				log.error("输入的日期类型不合乎yyyy-MM-dd", ex);
+				log.error("è¾“å…¥çš„æ—¥æœŸç±»åž‹ä¸�å�ˆä¹Žyyyy-MM-dd", ex);
 				return null;
 			}
 		} else
 		{
-			log.warn("输入的不是字符类型");
+			log.warn("è¾“å…¥çš„ä¸�æ˜¯å­—ç¬¦ç±»åž‹");
 			return null;
 		}
 	}
 
 	/**
-	 * 当前月是多少天
+	 * å½“å‰�æœˆæ˜¯å¤šå°‘å¤©
 	 * 
 	 * @param year
-	 *            年
+	 *            å¹´
 	 * @param month
-	 *            月
+	 *            æœˆ
 	 * @param format
-	 *            日期格式化格式
+	 *            æ—¥æœŸæ ¼å¼�åŒ–æ ¼å¼�
 	 * @return String
 	 */
 
@@ -1050,13 +922,13 @@ public class DateUtil
 	}
 
 	/**
-	 * 计算两个日期时间相差几小时
+	 * è®¡ç®—ä¸¤ä¸ªæ—¥æœŸæ—¶é—´ç›¸å·®å‡ å°�æ—¶
 	 * 
 	 * @param startDate
-	 *            开始日期时间
+	 *            å¼€å§‹æ—¥æœŸæ—¶é—´
 	 * @param endDate
-	 *            结束日期时间
-	 * @return int 小时
+	 *            ç»“æ�Ÿæ—¥æœŸæ—¶é—´
+	 * @return int å°�æ—¶
 	 */
 
 	public static int getIntervalHours(String startDate, String endDate)
@@ -1074,7 +946,7 @@ public class DateUtil
 	}
 
 	/**
-	 * 计算两个时间相差几小时
+	 * è®¡ç®—ä¸¤ä¸ªæ—¶é—´ç›¸å·®å‡ å°�æ—¶
 	 * 
 	 * @param startday
 	 * @param endday

@@ -37,6 +37,49 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 
 	protected static final Log myLog = LogFactory.getLog(DatabaseHelperImpl.class);
 	
+	public void insertName()
+	{
+		String select_sql = " select distinct  stockname as name from " + MyConstants.TABLE_STOCK_RECORDS ;
+		
+		String sql = " insert into " + MyConstants.TABLE_STOCK_NAME +" (symbol)  values (?) ";
+		Connection conn = ConnectionSingleton.getConnection();
+		PreparedStatement ps = null;
+		Statement st = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(select_sql);
+			while (rs.next())
+			{
+				String stockName = rs.getString("name");
+				ps.setString(1, stockName);
+				ps.addBatch();
+			}
+			ps.executeBatch();
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+					st.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Inster finished.");
+		}
+	}
+	
 	public void insertName(List<String> nameList)
 	{
 		String sql = " insert into " + MyConstants.TABLE_STOCK_NAME +" (symbol)  values (?) ";
@@ -101,11 +144,11 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 			{
 				ps.setString(1, stock.getStockName());
 				ps.setDate(2, new java.sql.Date(stock.getTdate().getTime()));
-				ps.setFloat(3, stock.getOpen());
-				ps.setFloat(4, stock.getHigh());
-				ps.setFloat(5, stock.getLow());
-				ps.setFloat(6, stock.getClose());
-				ps.setFloat(7, stock.getVolume());
+				ps.setDouble(3, stock.getOpen());
+				ps.setDouble(4, stock.getHigh());
+				ps.setDouble(5, stock.getLow());
+				ps.setDouble(6, stock.getClose());
+				ps.setDouble(7, stock.getVolume());
 				ps.addBatch();
 			}
 			
@@ -133,6 +176,72 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 	}
 	
 	@Override
+	public void insertRecords(List<StockRecord> records)
+	{
+		/*
+		'id','int(11)','NO','PRI',NULL,'auto_increment'
+		'stockName','varchar(45)','NO','',NULL,''
+		'tdate','date','YES','',NULL,''
+		'open','decimal(10,3)','YES','',NULL,''
+		'high','decimal(10,3)','YES','',NULL,''
+		'low','decimal(10,3)','YES','',NULL,''
+		'close','decimal(10,3)','YES','',NULL,''
+		'volume','bigint(20)','YES','',NULL,''
+		*/
+		
+		String sql = " insert into " + MyConstants.TABLE_STOCK_RECORDS +" (stockName, tdate, open,high,low,close,volume) "
+				+    " values (?, ?, ?, ?, ?, ?, ?) ";
+		Connection conn = ConnectionSingleton.getConnection();
+		
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(sql);
+	
+			for(int i=0;i<records.size();i++)
+			{
+				StockRecord stock = records.get(i);
+				ps.setString(1, stock.getStockName());
+				ps.setDate(2, new java.sql.Date(stock.getTdate().getTime()));
+				ps.setDouble(3, stock.getOpen());
+				ps.setDouble(4, stock.getHigh());
+				ps.setDouble(5, stock.getLow());
+				ps.setDouble(6, stock.getClose());
+				ps.setDouble(7, stock.getVolume());
+				ps.addBatch();
+				
+				if (i%1000==0)
+				{
+					ps.executeBatch();
+					ps.clearParameters();
+				}
+			}
+			ps.executeBatch();
+			
+		}catch(SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+		}catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}finally
+		{
+			if (ps != null)
+			{
+				try
+				{
+					ps.close();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+	
+	
+	@Override
 	public List<String> getStockNames()
 	{
 		myLog.info("get all stock names ...");
@@ -153,7 +262,7 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 			{
 				// Retrieve by column name
 				//int id = rs.getInt("id");
-				String stockName = rs.getString("name");
+				String stockName = rs.getString("symbol");
 				retList.add(stockName);
 			}
 			rs.close();
@@ -898,14 +1007,12 @@ public class DatabaseHelperImpl implements IDatabaseHelper
 		{
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT t.tdate as myDate "
-					+ "from " + MyConstants.TABLE_STOCK_RECORDS + " t "
-					+ "GROUP BY t.tdate "
-					+ "ORDER BY t.tdate ASC ";
+			sql = "SELECT distinct t.tdate as myDate "
+					+ "FROM " + MyConstants.TABLE_STOCK_RECORDS + " t "
+					+ "ORDER BY myDate ASC ";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next())
 			{
-				//Retrieve by column name
 				Date myDate = rs.getDate("myDate");
 				retList.add(DateUtil.convertDateToString(myDate));
 			}

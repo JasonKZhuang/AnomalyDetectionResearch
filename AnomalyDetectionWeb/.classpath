@@ -13,5 +13,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/GoogleDrive/JasonPro/Eclipse_Photon_J2EE/plugins/org.junit_4.12.0.v201504281640/junit.jar" sourcepath="C:/Users/Jason/.m2/repository/junit/junit/4.12/junit-4.12-sources.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

@@ -1,0 +1,33 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : MacBook
+Source Server Version : 50722
+Source Host           : 10.0.0.5:3306
+Source Database       : myProject
+
+Target Server Type    : MYSQL
+Target Server Version : 50722
+File Encoding         : 65001
+
+Date: 2018-10-05 11:55:09
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for PeerGroup
+-- ----------------------------
+DROP TABLE IF EXISTS `PeerGroup`;
+CREATE TABLE `PeerGroup` (
+  `rid` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_name` varchar(45) NOT NULL,
+  `peer_members` varchar(1000) DEFAULT NULL,
+  `window_no` int(11) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `mean_value` decimal(12,4) DEFAULT NULL,
+  `euclDistance_to_members` varchar(1000) DEFAULT NULL,
+  `mean_value_with_weights` decimal(12,4) DEFAULT NULL,
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4846 DEFAULT CHARSET=latin1;

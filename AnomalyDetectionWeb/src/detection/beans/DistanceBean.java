@@ -4,7 +4,7 @@ public class DistanceBean
 {
 	private StockRecord record;
 	
-	private float distance;
+	private double distance;
 
 	public StockRecord getRecord()
 	{
@@ -16,12 +16,12 @@ public class DistanceBean
 		this.record = record;
 	}
 
-	public float getDistance()
+	public double getDistance()
 	{
 		return distance;
 	}
 
-	public void setDistance(float distance)
+	public void setDistance(double distance)
 	{
 		this.distance = distance;
 	}

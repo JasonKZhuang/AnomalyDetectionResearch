@@ -3,6 +3,8 @@ package detection.fileOperation;
 import java.io.File;
 import java.util.List;
 
+import detection.algorithms.kaizhi.RecordBean;
+import detection.algorithms.kaizhi.SimilarityBean;
 import detection.beans.StockName;
 import detection.beans.StockRecord;
 

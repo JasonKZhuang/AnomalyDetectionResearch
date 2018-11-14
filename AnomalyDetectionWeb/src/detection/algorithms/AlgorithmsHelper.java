@@ -55,7 +55,7 @@ public class AlgorithmsHelper implements IAlgorithmsHelper
 			}
 			
 			//the distance between self close price value and any other close price
-			float diff = Math.abs(self.getClose() - r.getClose());
+			double diff = Math.abs(self.getClose() - r.getClose());
 			
 			//diff =  (float)(Math.round(diff * 10000))/10000;
 		    BigDecimal bd = new BigDecimal(diff); 
@@ -264,10 +264,10 @@ public class AlgorithmsHelper implements IAlgorithmsHelper
 	 */
 	private void buildNN(StockWithNNBean bean, List<StockReturnRate> returnRates)
 	{
-		float selfReturn = bean.getSelf().getReturnRate();
-		float minReturn = selfReturn - (Math.abs(selfReturn) * MyConstants.nearCoefficient);
-		float maxReturn = selfReturn + (Math.abs(selfReturn) * MyConstants.nearCoefficient);
-		float temReturn = 0;
+		double selfReturn = bean.getSelf().getReturnRate();
+		double minReturn = selfReturn - (Math.abs(selfReturn) * MyConstants.nearCoefficient);
+		double maxReturn = selfReturn + (Math.abs(selfReturn) * MyConstants.nearCoefficient);
+		double temReturn = 0;
 		if (bean.getNeighbours() == null)
 		{
 			bean.setNeighbours(new ArrayList<StockReturnRate>());

@@ -6,10 +6,10 @@ public class StockRecord
 {
 	private String stockName;
 	private Date tdate;
-	private float open;
-	private float high;
-	private float low;
-	private float close;
+	private double open;
+	private double high;
+	private double low;
+	private double close;
 	private long volume;
 	
 	public StockRecord()
@@ -37,42 +37,42 @@ public class StockRecord
 		this.tdate = tdate;
 	}
 
-	public float getOpen()
+	public double getOpen()
 	{
 		return open;
 	}
 
-	public void setOpen(float open)
+	public void setOpen(double open)
 	{
 		this.open = open;
 	}
 
-	public float getHigh()
+	public double getHigh()
 	{
 		return high;
 	}
 
-	public void setHigh(float high)
+	public void setHigh(double high)
 	{
 		this.high = high;
 	}
 
-	public float getLow()
+	public double getLow()
 	{
 		return low;
 	}
 
-	public void setLow(float low)
+	public void setLow(double low)
 	{
 		this.low = low;
 	}
 
-	public float getClose()
+	public double getClose()
 	{
 		return close;
 	}
 
-	public void setClose(float close)
+	public void setClose(double close)
 	{
 		this.close = close;
 	}
@@ -86,5 +86,7 @@ public class StockRecord
 	{
 		this.volume = volume;
 	}
+
+	
 	
 }
